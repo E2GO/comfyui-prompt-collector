@@ -23,6 +23,7 @@ Requires [Node.js](https://nodejs.org/) 18+ installed.
 
 ## How to use
 
+0. Start with npm start in projet folder's CMD.
 1. Click **Select Folder** (or `File → Select Folder`, `Ctrl+O`) and pick a folder with ComfyUI PNG images
 2. Wait for the scan to finish — all prompts appear on the left, thumbnails on the right
 3. Click any image thumbnail to highlight its prompt and scroll to it
