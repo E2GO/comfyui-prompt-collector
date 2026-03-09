@@ -75,7 +75,6 @@ The parser handles a variety of ComfyUI node types:
 
 - `CLIPTextEncode` — standard positive/negative prompts
 - `PrimitiveStringMultiline` / `PrimitiveString` — primitive text nodes
-- `PowderConditioner` — Powder workflow conditioning
 - LoRA loaders — trigger word extraction
 - Text input / string input nodes
 - Negative prompt detection via KSampler graph tracing
