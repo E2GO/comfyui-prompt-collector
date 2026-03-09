@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; img-src 'self' data: file: thumb:; style-src 'self';">
+  <title>ComfyUI Prompt Collector</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Top bar: folder selection -->
+  <div id="toolbar-top">
+    <button id="btn-select-folder">Select Folder</button>
+    <span id="folder-path" class="folder-path">No folder selected</span>
+  </div>
+
+  <!-- Second bar: filters, search, actions -->
+  <div id="toolbar-filters">
+    <label class="filter-checkbox">
+      <input type="checkbox" id="filter-positive" checked> Positive
+    </label>
+    <label class="filter-checkbox">
+      <input type="checkbox" id="filter-negative"> Negative
+    </label>
+    <label class="filter-checkbox">
+      <input type="checkbox" id="filter-trigger"> Triggers
+    </label>
+
+    <div class="toolbar-separator"></div>
+
+    <input type="text" id="search-input" placeholder="Search prompts..." class="search-input">
+
+    <span id="prompt-count" class="prompt-count">0 prompts</span>
+
+    <div class="toolbar-spacer"></div>
+
+    <button id="btn-sort-order" class="btn-toggle active" title="Longest prompt first">Long first</button>
+    <button id="btn-autocopy" class="btn-toggle active" title="Auto-copy on image click">Auto-copy</button>
+
+    <div class="export-wrapper">
+      <button id="btn-export">Export &#9662;</button>
+      <div id="export-menu" class="export-menu hidden">
+        <button class="export-option" data-format="txt">Export as TXT</button>
+        <button class="export-option" data-format="csv">Export as CSV</button>
+        <button class="export-option" data-format="json">Export as JSON</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Content -->
+  <div id="main-content">
+
+    <!-- Left panel: prompt list -->
+    <div id="prompt-list-panel">
+      <div id="prompt-list">
+        <div class="empty-state">
+          <p>No prompts loaded.</p>
+          <p class="muted">Click <strong>Select Folder</strong> to scan a directory of PNG images.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right panel: image gallery -->
+    <div id="gallery-panel">
+      <div id="gallery-header">
+        <span id="gallery-selected-name" class="gallery-selected-name">No image selected</span>
+        <button id="btn-show-in-folder" class="btn-show-in-folder hidden" title="Show in Explorer">&#128194;</button>
+      </div>
+      <div id="gallery-grid">
+        <div class="empty-state">
+          <p>No images loaded</p>
+        </div>
+      </div>
+      <div id="gallery-footer">
+        <span class="gallery-footer-label">Size</span>
+        <input type="range" id="gallery-size-slider" min="3" max="9" value="6" step="1">
+        <span id="gallery-size-value">6</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Status Bar -->
+  <div id="status-bar">
+    <span id="status-text">Ready</span>
+    <span class="toolbar-spacer"></span>
+    <button id="btn-open-logs" class="btn-status-link" title="Open log folder">Logs</button>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="toast hidden">Copied!</div>
+
+  <script src="renderer.js"></script>
+</body>
+</html>
