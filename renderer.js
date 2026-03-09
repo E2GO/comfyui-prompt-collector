@@ -490,3 +490,32 @@ document.getElementById('btn-open-logs').addEventListener('click', () => {
 window.api.onMenuSelectFolder(selectAndScanFolder);
 window.api.onMenuExport((format) => exportAs(format));
 window.api.onMenuToggleSort(toggleSortOrder);
+
+// ── Auto-load Last Folder ──────────────────────────────────────────────────
+
+(async () => {
+  const lastFolder = await window.api.getLastFolder();
+  if (lastFolder) {
+    folderPath.textContent = lastFolder;
+    statusText.textContent = 'Scanning last folder...';
+    promptList.innerHTML = '<div class="empty-state"><p>Scanning...</p></div>';
+    galleryGrid.innerHTML = '<div class="empty-state"><p>Loading images...</p></div>';
+    scanning = true;
+    btnSelectFolder.disabled = true;
+    await window.api.clearThumbCache();
+    try {
+      const result = await window.api.scanFolder(lastFolder);
+      allPrompts = result.prompts;
+      allImagePaths = result.imagePaths;
+      statusText.textContent = `Done: ${allPrompts.length} prompts from ${allImagePaths.length} images`;
+      btnExport.disabled = allPrompts.length === 0;
+      renderPrompts();
+      renderGallery();
+    } catch {
+      statusText.textContent = 'Failed to load last folder';
+    } finally {
+      scanning = false;
+      btnSelectFolder.disabled = false;
+    }
+  }
+})();

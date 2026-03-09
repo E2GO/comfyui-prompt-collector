@@ -2,6 +2,7 @@ const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('api', {
   clearThumbCache: () => ipcRenderer.invoke('clear-thumb-cache'),
+  getLastFolder: () => ipcRenderer.invoke('get-last-folder'),
   selectFolder: () => ipcRenderer.invoke('select-folder'),
   scanFolder: (path) => ipcRenderer.invoke('scan-folder', path),
   exportPrompts: (data) => ipcRenderer.invoke('export-prompts', data),

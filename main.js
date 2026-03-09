@@ -8,6 +8,22 @@ const THUMB_SIZE = 200;
 const thumbCache = new Map();
 
 let mainWindow = null;
+let settingsPath = null;
+
+function loadSettings() {
+  try {
+    return JSON.parse(fs.readFileSync(settingsPath, 'utf8'));
+  } catch {
+    return {};
+  }
+}
+
+function saveSettings(data) {
+  try {
+    const current = loadSettings();
+    fs.writeFileSync(settingsPath, JSON.stringify({ ...current, ...data }, null, 2), 'utf8');
+  } catch { /* ignore */ }
+}
 
 function buildMenu() {
   const template = [
@@ -107,7 +123,9 @@ protocol.registerSchemesAsPrivileged([
 ]);
 
 app.whenReady().then(() => {
-  log.init(app.getPath('userData'));
+  const userData = app.getPath('userData');
+  settingsPath = path.join(userData, 'settings.json');
+  log.init(userData);
   log.info('app', 'App ready', {
     version: app.getVersion(),
     electron: process.versions.electron,
@@ -195,15 +213,22 @@ ipcMain.handle('clear-thumb-cache', () => {
   log.info('ipc', `Thumb cache cleared (${count} entries)`);
 });
 
+ipcMain.handle('get-last-folder', () => {
+  return loadSettings().lastFolder || null;
+});
+
 ipcMain.handle('select-folder', async () => {
   log.info('ipc', 'Folder selection dialog opened');
+  const settings = loadSettings();
   const result = await dialog.showOpenDialog(mainWindow, {
     properties: ['openDirectory'],
+    defaultPath: settings.lastFolder || undefined,
   });
   if (result.canceled || result.filePaths.length === 0) {
     log.info('ipc', 'Folder selection cancelled');
     return null;
   }
+  saveSettings({ lastFolder: result.filePaths[0] });
   log.info('ipc', 'Folder selected');
   return result.filePaths[0];
 });
